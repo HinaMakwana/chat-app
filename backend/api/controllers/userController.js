@@ -7,13 +7,13 @@ export const getUsers = async (req,res) => {
 		// const userId = req.me._id;
 
 		const findUsers = await User.find({
-			// _id: { $ne: userId }
+			 _id: { $ne: req.me._id }
 		}).select("-password");
 
 		return res.status(HTTP_STATUS_CODE.OK).json({
 			status: HTTP_STATUS_CODE.OK,
 			data: findUsers,
-			error: null
+			error: ''
 		})
 	} catch (error) {
 		return res.status(HTTP_STATUS_CODE.SERVER_ERROR).json({

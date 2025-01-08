@@ -9,7 +9,6 @@ const useLogin = () => {
   const { setAuthUser } = useAuthContext();
 
   const login = async ({ email, password }) => {
-		console.log(email,password);
     const success = handleInputErrors({ email, password });
     if (!success) return;
 
@@ -20,9 +19,8 @@ const useLogin = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      console.log(1);
       const data = await res.json();
-      console.log(data);
+
       if (data.error) {
         throw new Error(data.error);
       }

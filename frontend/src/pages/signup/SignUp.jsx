@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import GenderCheckbox from "./GenderCheckbox";
 import { Link } from "react-router-dom";
 import useSignup from "../../hooks/useSignup";
+import { IoMdEye } from "react-icons/io";
+import { RiEyeCloseFill } from "react-icons/ri";
 
 function SignUp() {
   const [inputs, setInputs] = useState({
@@ -13,6 +15,9 @@ function SignUp() {
     gender: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for toggling confirmPassword visibility
+
   const { loading, signup } = useSignup();
 
   const handleSubmit = async (e) => {
@@ -23,6 +28,7 @@ function SignUp() {
   const handleCheckboxChange = (gender) => {
     setInputs({ ...inputs, gender });
   };
+
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <div className="w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
@@ -75,29 +81,57 @@ function SignUp() {
             <label className="label p-2">
               <span className="text-base label-text">Password</span>
             </label>
-            <input
-              type="password"
-              placeholder="Enter password"
-              className="w-full input input-bordered h-10"
-              value={inputs.password}
-              onChange={(e) =>
-                setInputs({ ...inputs, password: e.target.value })
-              }
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"} // Toggle input type
+                placeholder="Enter password"
+                className="w-full input input-bordered h-10 pr-10"
+                value={inputs.password}
+                onChange={(e) =>
+                  setInputs({ ...inputs, password: e.target.value })
+                }
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+                onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+              >
+                {showPassword ? (
+                  <IoMdEye size={20}/>
+                ) : (
+                  <RiEyeCloseFill size={20}/>
+                )}
+              </button>
+            </div>
           </div>
-          <div>
+          <div className="pb-2">
             <label className="label p-2">
               <span className="text-base label-text">Confirm Password</span>
             </label>
-            <input
-              type="password"
-              placeholder="Confirm password"
-              className="w-full input input-bordered h-10"
-              value={inputs.confirmPassword}
-              onChange={(e) =>
-                setInputs({ ...inputs, confirmPassword: e.target.value })
-              }
-            />
+            <div className="relative w-full">
+              <input
+                type={showConfirmPassword ? "text" : "password"} // Toggle input type
+                placeholder="Confirm password"
+                className="w-full input input-bordered h-10 pr-10"
+                value={inputs.confirmPassword}
+                onChange={(e) =>
+                  setInputs({ ...inputs, confirmPassword: e.target.value })
+                }
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                } // Toggle visibility
+              >
+                {showConfirmPassword ? (
+                  <IoMdEye size={20}/>
+                ) : (
+                  <RiEyeCloseFill size={20}/>
+                )}
+              </button>
+            </div>
           </div>
           <GenderCheckbox
             onCheckboxChange={handleCheckboxChange}
@@ -110,7 +144,10 @@ function SignUp() {
             Already have an account?
           </Link>
           <div className="mt-4">
-            <button className="btn btn-block btn-sm" disabled={loading}>
+            <button
+              className="btn btn-block btn-sm h-10 hover:bg-gray-850"
+              disabled={loading}
+            >
               {loading ? (
                 <span className="loading loading-spinner"></span>
               ) : (

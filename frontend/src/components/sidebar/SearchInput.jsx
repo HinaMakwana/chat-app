@@ -11,8 +11,6 @@ function SearchInput() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(search,'search');
-		console.log(conversations,'fff');
 		if(!search) return;
 		const conversation = conversations.find((c) => c.username.toLowerCase().includes(search.toLowerCase()));
 

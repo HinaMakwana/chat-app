@@ -4,11 +4,10 @@ import useGetMessages from "../../hooks/useGetMessages";
 import MessageSkeleton from "../skeleton/MessageSkeleton";
 import useListenMessages from "../../hooks/useListenMessages";
 
-function Messages() {
+function Messages({ onReply }) {
   const { loading, messages } = useGetMessages();
   useListenMessages();
   const lastMsgRef = useRef();
-  console.log(messages);
   useEffect(() => {
     setTimeout(() => {
       lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -17,10 +16,10 @@ function Messages() {
 
   return (
     <div className="px-4 flex-1 overflow-auto">
-      {!loading &&
-        messages.map((message) => (
+      {!loading && messages.length > 0 &&
+          messages?.map((message) => (
           <div key={message._id} ref={lastMsgRef}>
-            <Message message={message} />
+            <Message message={message} onReply={onReply}/>
           </div>
         ))}
       {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}

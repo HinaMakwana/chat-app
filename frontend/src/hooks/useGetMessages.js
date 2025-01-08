@@ -23,9 +23,13 @@ const useGetMessages = () => {
           }
         );
         const data = await res.json();
-
-				if(selectedConversation?._id) { setMessages(data.data);}
-
+        if (data.errorCode === "AUTH003" || data.errorCode === "AUTH004") {
+          localStorage.removeItem("chat-user");
+          Cookies.remove("token");
+        }
+        if (selectedConversation?._id) {
+          setMessages(data.data);
+        }
       } catch (error) {
         toast.error(error.message);
       } finally {

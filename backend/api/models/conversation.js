@@ -2,20 +2,27 @@ import mongoose from "mongoose";
 import model from "../../config/model.js";
 
 const conversationSchema = new mongoose.Schema({
-    members: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
-    ],
-    messages: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Message",
-						default: [],
-        },
-    ],
-		...model
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+      default: [],
+    },
+  ],
+//   attachments: [
+//     {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "Media",
+//       default: [],
+//     },
+//   ],
+  ...model,
 });
 
 const Conversation = mongoose.model("Conversation", conversationSchema);

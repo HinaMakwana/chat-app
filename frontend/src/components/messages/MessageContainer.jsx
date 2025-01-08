@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
 import { TiMessages } from "react-icons/ti";
@@ -8,6 +8,7 @@ import { useAuthContext } from "../../context/AuthContext";
 function MessageContainer() {
   const { selectedConversation, setSelectedConversation } =
     useConversationStore();
+    const [replyMessage, setReplyMessage] = useState(null);
 
   useEffect(() => {
     // socket.on("newMessage", (newMessage) => {
@@ -29,8 +30,9 @@ function MessageContainer() {
             <span className="label-text">To: </span>
             <span className="text-gray-900 font-bold">{selectedConversation.username}</span>
           </div>
-          <Messages />
-          <MessageInput />
+          <Messages onReply={setReplyMessage}/>
+          <MessageInput replyMessage={replyMessage}
+            clearReply={() => setReplyMessage(null)}/>
         </>
       )}
     </div>
@@ -41,7 +43,6 @@ export default MessageContainer;
 
 const NoChatSelected = () => {
   const {authUser} = useAuthContext()
-  console.log(authUser  ,'ffff');
   return (
     <div className="flex items-center justify-center h-full w-full">
       <div className="text-center px-4 sm:text-lg md:text-xl text-gray-200 font-semibold flex flex-col items-center gap-2">
