@@ -11,7 +11,7 @@ import {
 import useDeleteMessage from "../../hooks/useDeleteMessage";
 import useListenMessages from "../../hooks/useListenMessages";
 
-function Message({ message, onReply}) {
+function Message({ message, onReply }) {
   const { authUser } = useAuthContext();
   const { selectedConversation } = useConversationStore();
   const { loading, deleteMessage } = useDeleteMessage();
@@ -22,11 +22,10 @@ function Message({ message, onReply}) {
   const profilePic = fromMe
     ? authUser.data.findUser.profilePic
     : selectedConversation?.profilePic;
-  const bubbleBgColor = fromMe ? "bg-blue-500" : "bg-gray-300";
+  const bubbleBgColor = fromMe ? "bg-teal-950" : "bg-gray-800";
   const formattedTime = extractTime(message.createdAt);
   const [isHovered, setIsHovered] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [replyMessage, setReplyMessage] = useState(null);
   const menuRef = useRef(null);
   const messageRef = useRef(null);
 
@@ -43,7 +42,6 @@ function Message({ message, onReply}) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   // Render attachments
   const renderAttachments = (attachments) =>
     attachments?.map((attachment, index) => {
@@ -112,12 +110,6 @@ function Message({ message, onReply}) {
               </svg>
             </div>
           )}
-          {isHovered && (
-            <AiOutlineEllipsis
-              onClick={() => setMenuVisible((prev) => !prev)}
-              className="absolute top-0 right-0 mt-1 mr-1 text-gray-600 cursor-pointer"
-            />
-          )}
         </div>
       );
     });
@@ -134,40 +126,55 @@ function Message({ message, onReply}) {
           <img alt="Profile" src={profilePic} />
         </div>
       </div>
+      <div
+        className={` chat-bubble chat-bubble-accent p-2 rounded-lg ${bubbleBgColor} text-white relative shadow-sm ${
+          isHovered ? "shadow-md" : ""
+        }`}
+      >
+        {/* ReplyTo Message */}
+        {message.replyTo && (
+          <div className="relative bg-slate-100 text-black rounded-md flex mb-1">
+            {/* Purple Line on the Left */}
+            <div className="w-1 bg-purple-600 rounded-l-md"></div>
 
-      {/* Render ReplyTo */}
-      {message.replyTo && (
-        <div className="chat-bubble bg-gray-300 text-black mb-2 p-2 rounded-md">
-          {message.replyTo.message && (
-            <div className="text-sm text-gray-700">
-              {message.replyTo.message}
+            {/* Reply Message Content */}
+            <div className="p-2 pl-2">
+              {message.replyTo.message && (
+                <div className="text-sm text-gray-700">
+                  {message.replyTo.message}
+                </div>
+              )}
+
+              {/* Reply Attachments */}
+              {message.replyTo.attachments?.length > 0 &&
+                renderAttachments(message.replyTo.attachments)}
             </div>
-          )}
-          {message.replyTo.attachments?.length > 0 &&
-            renderAttachments(message.replyTo.attachments)}
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Render Current Message */}
-      {message?.attachments && message?.attachments?.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {renderAttachments(message.attachments)}
-        </div>
-      ) : (
-        <div
-          className={`chat-bubble text-white ${bubbleBgColor} ${
-            isHovered ? "shadow-md" : ""
-          }`}
-        >
-          {message.message}
-          {isHovered && (
-            <AiOutlineEllipsis
-              onClick={() => setMenuVisible((prev) => !prev)}
-              className="absolute top-0 right-0 mt-1 mr-1 text-gray-600 cursor-pointer"
-            />
-          )}
-        </div>
-      )}
+        {/* Current Message */}
+        {message.attachments?.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {renderAttachments(message.attachments)}
+            {isHovered && (
+              <AiOutlineEllipsis
+                onClick={() => setMenuVisible((prev) => !prev)}
+                className="absolute top-0 right-0 mt-1 mr-1 text-gray-600 cursor-pointer"
+              />
+            )}
+          </div>
+        ) : (
+          <div>{message.message}</div>
+        )}
+
+        {/* Menu Icon */}
+        {isHovered && (
+          <AiOutlineEllipsis
+            onClick={() => setMenuVisible((prev) => !prev)}
+            className="absolute top-1 right-1 text-gray-600 cursor-pointer"
+          />
+        )}
+      </div>
 
       {/* Three-dot menu */}
       {menuVisible && (
