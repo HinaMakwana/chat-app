@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
       gender,
       profilePic,
     } = req.body;
-
+    print("hello")
     const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
     const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
